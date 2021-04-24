@@ -1,0 +1,9 @@
+.DS_Store
+.phpunit.result.cache
+
+/.env.local
+/.env.local.php
+/.env.*.local
+/var/
+/vendor/
+/node_modules/
