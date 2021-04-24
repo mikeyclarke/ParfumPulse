@@ -30,7 +30,7 @@ jobs:
                       ${{ runner.os }}-composer-
 
             - name: Install composer dependencies
-              run: composer install --prefer-dist --no-progress --no-suggest
+              run: composer install --prefer-dist --no-progress
 
             - name: Create .env.local file
               run: echo "APP_ENV=prod" > .env.local
