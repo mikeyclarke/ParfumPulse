@@ -1,0 +1,45 @@
+name: Test
+
+on: [push]
+
+jobs:
+    test_php:
+        name: ParfumPulse PHP tests (PHP ${{ matrix.php-versions }})
+        runs-on: ubuntu-20.04
+        strategy:
+            matrix:
+                php-versions: [8.0]
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Setup PHP, extensions, and composer
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  extensions: redis, bcmath, pgsql, intl, mbstring, xml, apcu
+              env:
+                  update: true
+
+            - name: Cache composer packages
+              id: composer-cache
+              uses: actions/cache@v2
+              with:
+                  path: vendor
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-
+
+            - name: Install composer dependencies
+              run: composer install --prefer-dist --no-progress --no-suggest
+
+            - name: Create .env.local file
+              run: echo "APP_ENV=prod" > .env.local
+
+            - name: Check PHP coding standards
+              run: make phpcs
+
+            - name: Run PHP unit tests
+              run: make phpunit
+
+            - name: Run php static analysis
+              run: make phpstan
