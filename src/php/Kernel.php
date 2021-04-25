@@ -30,6 +30,7 @@ final class Kernel extends BaseKernel
         $configDir = $this->getProjectDir() . '/config';
 
         $loader->load($configDir . '/packages/*.yml', 'glob');
+        $loader->load($configDir . '/packages/' . $this->environment . '/*.yml', 'glob');
         $loader->load($configDir . '/services.yml');
     }
 
