@@ -17,6 +17,7 @@ final class Kernel extends BaseKernel
     public function registerBundles(): array
     {
         return [
+            new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
         ];

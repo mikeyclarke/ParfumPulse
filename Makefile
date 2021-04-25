@@ -32,6 +32,18 @@ phpstan: ## Check that PHP passes static analysis
 	./vendor/bin/phpstan analyse --memory-limit=-1 src/php tests/php --level 8
 
 ## ---------
+##	Environment
+## ---------
+
+create_migration: ## Create a new “up” and a new “down” migration file in database/migrations
+	@read -p "Enter migration name (e.g. “create_user_table”): " migrationName; \
+	migrate create -ext sql -dir database/migrations/ $$migrationName; \
+	find database/migrations -name "*_$$migrationName.*.sql"
+
+run_migrations: ## Run migrations
+	migrate -database $(subst pgsql,postgres,$(DATABASE_URL))?sslmode=disable -path database/migrations up
+
+## ---------
 ##	Make setup
 ## ---------
 
