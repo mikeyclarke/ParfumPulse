@@ -1,3 +1,6 @@
+imports:
+    - { resource: merchants.yml }
+
 # This file is the entry point to configure your own services.
 # Files in the packages/ subdirectory configure your dependencies.
 
@@ -5,6 +8,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    max_failed_scrape_days: '%env(int:MAX_FAILED_SCRAPE_DAYS)%'
 
 services:
     # default configuration for services in *this* file
@@ -14,6 +18,9 @@ services:
         public: true        # Allows optimizing the container by removing unused services; this also means
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
+
+        bind:
+            $merchantsConfig: '%merchants%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -27,3 +34,13 @@ services:
     ParfumPulse\FrontEnd\Controller\:
         resource: '../src/php/FrontEnd/Controller'
         tags: ['controller.service_arguments']
+
+    ParfumPulse\Scraper\ScraperBot:
+        autowire: false
+
+    ParfumPulse\Scraper\ScraperFailuresProcessor:
+        arguments:
+            $maxFailedScrapeDays: '%max_failed_scrape_days%'
+
+    ParfumPulse\Scraper\ScraperResult:
+        autowire: false

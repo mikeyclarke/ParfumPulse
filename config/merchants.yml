@@ -1,0 +1,8 @@
+parameters:
+    merchants:
+        notino:
+            name: 'Notino'
+            url: 'https://www.notino.co.uk'
+            sitemap_url: 'https://www.notino.co.uk/export/sitemap/sitemap_detail_parfemy_uk.xml'
+            ignore_list_file: '/Users/mikey/code/ParfumPulse/notino_ignores.json'
+            use_lastmod: true

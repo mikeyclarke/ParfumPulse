@@ -1,0 +1,2 @@
+ALTER TABLE fragrance DROP COLUMN IF EXISTS type;
+DROP TYPE IF EXISTS fragrance_type;
