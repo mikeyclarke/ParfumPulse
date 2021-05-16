@@ -30,7 +30,8 @@
         "symfony/dom-crawler": "^5.2",
         "symfony/css-selector": "^5.2",
         "symfony/http-client": "^5.2",
-        "ausi/slug-generator": "^1.1"
+        "ausi/slug-generator": "^1.1",
+        "michelf/php-smartypants": "^1.8"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.6",

@@ -7,20 +7,24 @@ namespace ParfumPulse\Brand;
 use ParfumPulse\Brand\BrandCreator;
 use ParfumPulse\Brand\BrandModel;
 use ParfumPulse\Brand\BrandRepository;
+use ParfumPulse\Typography\StringNormalizer;
 
 class BrandLazyCreation
 {
     public function __construct(
         private BrandCreator $brandCreator,
         private BrandRepository $brandRepository,
+        private StringNormalizer $stringNormalizer,
     ) {
     }
 
     public function createOrRetrieve(string $name): BrandModel
     {
-        $result = $this->brandRepository->findOneByName($name);
+        $normalized = $this->stringNormalizer->normalize($name);
+
+        $result = $this->brandRepository->findOneByName($normalized);
         if (null === $result) {
-            return $this->brandCreator->create($name);
+            return $this->brandCreator->create($normalized);
         }
         return BrandModel::createFromArray($result);
     }

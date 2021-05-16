@@ -11,6 +11,7 @@ use ParfumPulse\Brand\BrandCreator;
 use ParfumPulse\Brand\BrandLazyCreation;
 use ParfumPulse\Brand\BrandModel;
 use ParfumPulse\Brand\BrandRepository;
+use ParfumPulse\Typography\StringNormalizer;
 
 class BrandLazyCreationTest extends TestCase
 {
@@ -18,29 +19,34 @@ class BrandLazyCreationTest extends TestCase
 
     private LegacyMockInterface $brandCreator;
     private LegacyMockInterface $brandRepository;
+    private LegacyMockInterface $stringNormalizer;
     private BrandLazyCreation $brandLazyCreation;
 
     public function setUp(): void
     {
         $this->brandCreator = m::mock(BrandCreator::class);
         $this->brandRepository = m::mock(BrandRepository::class);
+        $this->stringNormalizer = m::mock(StringNormalizer::class);
 
         $this->brandLazyCreation = new BrandLazyCreation(
             $this->brandCreator,
             $this->brandRepository,
+            $this->stringNormalizer,
         );
     }
 
     public function testCreateOrRetrieveWhenBrandAlreadyExists(): void
     {
-        $name = 'Chanel';
+        $name = 'L\'Occitane';
 
+        $normalized = 'L’Occitane';
         $brandRow = [
             'id' => 123,
-            'name' => $name,
+            'name' => $normalized,
         ];
 
-        $this->createBrandRepositoryExpectation([$name], $brandRow);
+        $this->createStringNormalizerExpectation([$name], $normalized);
+        $this->createBrandRepositoryExpectation([$normalized], $brandRow);
 
         $result = $this->brandLazyCreation->createOrRetrieve($name);
         $this->assertInstanceOf(BrandModel::class, $result);
@@ -48,15 +54,26 @@ class BrandLazyCreationTest extends TestCase
 
     public function testCreateOrRetrieveWhenBrandDoesNotYetExist(): void
     {
-        $name = 'Chanel';
+        $name = 'L\'Occitane';
 
+        $normalized = 'L’Occitane';
         $brand = new BrandModel();
 
-        $this->createBrandRepositoryExpectation([$name], null);
-        $this->createBrandCreatorExpectation([$name], $brand);
+        $this->createStringNormalizerExpectation([$name], $normalized);
+        $this->createBrandRepositoryExpectation([$normalized], null);
+        $this->createBrandCreatorExpectation([$normalized], $brand);
 
         $result = $this->brandLazyCreation->createOrRetrieve($name);
         $this->assertEquals($brand, $result);
+    }
+
+    private function createStringNormalizerExpectation(array $args, string $result): void
+    {
+        $this->stringNormalizer
+            ->shouldReceive('normalize')
+            ->once()
+            ->with(...$args)
+            ->andReturn($result);
     }
 
     private function createBrandRepositoryExpectation(array $args, ?array $result): void
