@@ -177,7 +177,7 @@ class NotinoScraper implements ScraperInterface
             preg_match('/^[0-9.]+ ml$/', trim($variantData['additionalInfo']))
         ) {
             return isset($apolloStateData[$parametersKey]) ?
-                sprintf('%d ml', $apolloStateData[$parametersKey]) : $variantData['additionalInfo'];
+                sprintf('%d ml', $apolloStateData[$parametersKey]['amount']) : $variantData['additionalInfo'];
         }
 
         if (
