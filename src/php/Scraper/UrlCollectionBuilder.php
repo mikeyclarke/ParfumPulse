@@ -81,6 +81,9 @@ class UrlCollectionBuilder
                     'hasFailedScrapeDays' => $row['failed_scrape_days'] > 0,
                 ];
             }
+            if (null === $row['product_id']) {
+                continue;
+            }
             $result[$url]['productIds'][] = $row['product_id'];
         }
         return $result;
