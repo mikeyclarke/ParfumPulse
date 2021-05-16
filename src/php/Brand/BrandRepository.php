@@ -28,7 +28,7 @@ class BrandRepository
 
         $qb->select($fields)
             ->from(self::TABLE_NAME)
-            ->where('name = :name');
+            ->where('lower(unaccent(name)) = lower(unaccent(:name))');
 
         $qb->setParameter('name', $name);
 

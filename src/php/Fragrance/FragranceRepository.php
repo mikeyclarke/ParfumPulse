@@ -34,7 +34,11 @@ class FragranceRepository
             ->from(self::TABLE_NAME);
 
         foreach ($criteria as $column => $val) {
-            $qb->andWhere(sprintf('%s = :%s', $column, $column));
+            if ($column === 'name') {
+                $qb->andWhere('lower(unaccent(name)) = lower(unaccent(:name))');
+            } else {
+                $qb->andWhere(sprintf('%s = :%s', $column, $column));
+            }
             $qb->setParameter($column, $val);
         }
 
