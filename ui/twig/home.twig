@@ -1,1 +1,7 @@
 <h1>Welcome to ParfumPulse.</h1>
+
+<ul>
+    {% for brand in brands %}
+        <li><a href="{{ path('brand', {brand_url_slug: brand.url_slug}) }}">{{ brand.name }}</a></li>
+    {% endfor %}
+</ul>

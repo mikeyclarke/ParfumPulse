@@ -72,4 +72,25 @@ class VariantRepository
         }
         return $result;
     }
+
+    public function getFragranceVariantsData(int $fragranceId): array
+    {
+        $sql = <<<SQL
+SELECT
+    v.name,
+    m.code,
+    pr.amount
+FROM variant v
+LEFT JOIN product p ON p.variant_id = v.id
+LEFT JOIN price pr ON pr.product_id = p.id
+LEFT JOIN merchant m ON m.id = p.merchant_id
+WHERE v.fragrance_id = :fragrance_id
+AND pr.time_to IS NULL;
+SQL;
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('fragrance_id', $fragranceId);
+        $resultSet = $stmt->execute();
+        return $resultSet->fetchAllAssociative();
+    }
 }

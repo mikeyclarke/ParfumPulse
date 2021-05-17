@@ -48,4 +48,19 @@ class FragranceRepository
         }
         return $result;
     }
+
+    public function getAllForBrand(int $brandId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->select(self::DEFAULT_FIELDS)
+           ->from(self::TABLE_NAME)
+           ->where('brand_id = :brand_id')
+           ->orderBy('name', 'ASC');
+
+        $qb->setParameter('brand_id', $brandId);
+
+        $result = $qb->fetchAllAssociative();
+        return $result;
+    }
 }

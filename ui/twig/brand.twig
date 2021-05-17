@@ -1,0 +1,11 @@
+<h1>{{ brand.name }}</h1>
+
+<ul>
+    {% for fragrance in fragrances %}
+        <li><a href="{{ path('fragrance', {
+            brand_url_slug: brand.urlSlug,
+            fragrance_url_id: fragrance.url_id,
+            fragrance_url_slug: fragrance.url_slug,
+        }) }}">{{ fragrance.name }} ({{ fragrance.type }})</a></li>
+    {% endfor %}
+</ul>

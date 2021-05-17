@@ -38,4 +38,35 @@ class BrandRepository
         }
         return $result;
     }
+
+    public function findOneByUrlSlug(string $urlSlug, array $additionalFields = []): ?array
+    {
+        $fields = array_merge(self::DEFAULT_FIELDS, $additionalFields);
+
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->select($fields)
+            ->from(self::TABLE_NAME)
+            ->where('url_slug = :url_slug');
+
+        $qb->setParameter('url_slug', $urlSlug);
+
+        $result = $qb->fetchAssociative();
+        if (false === $result) {
+            return null;
+        }
+        return $result;
+    }
+
+    public function getAll(): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->select(self::DEFAULT_FIELDS)
+           ->from(self::TABLE_NAME)
+           ->orderBy('name', 'ASC');
+
+        $result = $qb->fetchAllAssociative();
+        return $result;
+    }
 }

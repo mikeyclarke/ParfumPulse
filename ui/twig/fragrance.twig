@@ -1,0 +1,10 @@
+<h1>{{ brand.name }} {{ fragrance.name }}</h1>
+
+<dl>
+    {% for name, prices in variants %}
+        <dt>{{ name }}</dt>
+        {% for price in prices %}
+            <dd>{{ price.merchant }}: {{ price.amount is null ? 'currently unavailable' : price.amount }}</dd>
+        {% endfor %}
+    {% endfor %}
+</dl>

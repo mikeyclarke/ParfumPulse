@@ -2,3 +2,13 @@ home_page:
     path: /
     methods: [GET]
     controller: ParfumPulse\FrontEnd\Controller\HomePageController::getAction
+
+brand:
+    path: /brands/{brand_url_slug}
+    methods: [GET]
+    controller: ParfumPulse\FrontEnd\Controller\BrandController::getAction
+
+fragrance:
+    path: /brands/{brand_url_slug}/{fragrance_url_slug}~{fragrance_url_id}
+    methods: [GET]
+    controller: ParfumPulse\FrontEnd\Controller\FragranceController::getAction
