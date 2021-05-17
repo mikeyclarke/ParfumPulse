@@ -51,7 +51,7 @@ class FragranceCreatorTest extends TestCase
         ];
 
         $urlId = 'abcd1234';
-        $urlSlug = 'toy-boy';
+        $urlSlug = 'toy-boy-eau-de-parfum';
         $fragranceRow = array_merge(
             $parameters,
             [
@@ -64,7 +64,7 @@ class FragranceCreatorTest extends TestCase
 
         $this->createFragranceValidatorExpectation([$parameters, true]);
         $this->createUrlIdGeneratorExpectation($urlId);
-        $this->createUrlSlugGeneratorExpectation([$parameters['name']], $urlSlug);
+        $this->createUrlSlugGeneratorExpectation([$parameters['name'] . ' ' . $parameters['type']], $urlSlug);
         $this->createFragranceStorageExpectation(
             [$parameters['name'], $parameters['gender'], $parameters['type'], $urlId, $urlSlug, $brandId],
             $fragranceRow

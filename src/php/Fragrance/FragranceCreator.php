@@ -26,7 +26,7 @@ class FragranceCreator
         $this->fragranceValidator->validate($parameters, true);
 
         $urlId = $this->urlIdGenerator->generate();
-        $urlSlug = $this->urlSlugGenerator->generate($parameters['name']);
+        $urlSlug = $this->urlSlugGenerator->generate(sprintf('%s %s', $parameters['name'], $parameters['type']));
 
         $result = $this->fragranceStorage->insert(
             $parameters['name'],
