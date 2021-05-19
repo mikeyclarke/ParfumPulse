@@ -47,6 +47,7 @@ class NotinoScraper implements ScraperInterface
         'aftershave water with atomizer for men',
         'after-shave spray for men',
         'perfume unisex',
+        'perfume refillable unisex',
         'eau de parfum',
         'eau de parfum unisex',
         'eau de toilette',
