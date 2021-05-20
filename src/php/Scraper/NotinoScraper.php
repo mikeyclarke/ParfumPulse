@@ -59,11 +59,6 @@ class NotinoScraper implements ScraperInterface
         'eau fraiche unisex',
         'perfume extract unisex',
     ];
-    private const DEFAULT_MALE_FRAGRANCE_TYPES = [
-        FragranceType::EAU_DE_COLOGNE,
-        FragranceType::AFTERSHAVE_WATER,
-        FragranceType::AFTERSHAVE_SPRAY,
-    ];
 
     private ScraperBot $bot;
 
@@ -205,7 +200,7 @@ class NotinoScraper implements ScraperInterface
             return FragranceGender::UNISEX;
         }
 
-        if (in_array($type, self::DEFAULT_MALE_FRAGRANCE_TYPES)) {
+        if (in_array($type, FragranceType::DEFAULT_MALE_FRAGRANCE_TYPES)) {
             return FragranceGender::MALE;
         }
 

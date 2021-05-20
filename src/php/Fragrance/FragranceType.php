@@ -16,6 +16,12 @@ final class FragranceType
     public const AFTERSHAVE_WATER = 'aftershave water';
     public const AFTERSHAVE_SPRAY = 'aftershave spray';
     public const EXTRAIT_DE_PARFUM = 'extrait de parfum';
+    public const SOIE_DE_PARFUM = 'soie de parfum';
+    public const DEFAULT_MALE_FRAGRANCE_TYPES = [
+        self::EAU_DE_COLOGNE,
+        self::AFTERSHAVE_WATER,
+        self::AFTERSHAVE_SPRAY,
+    ];
 
     public static function getAll(): array
     {
