@@ -20,6 +20,25 @@ class BrandRepository
     ) {
     }
 
+    public function findOneById(int $id, array $additionalFields = []): ?array
+    {
+        $fields = array_merge(self::DEFAULT_FIELDS, $additionalFields);
+
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->select($fields)
+            ->from(self::TABLE_NAME)
+            ->where('id = :id');
+
+        $qb->setParameter('id', $id);
+
+        $result = $qb->fetchAssociative();
+        if (false === $result) {
+            return null;
+        }
+        return $result;
+    }
+
     public function findOneByName(string $name, array $additionalFields = []): ?array
     {
         $fields = array_merge(self::DEFAULT_FIELDS, $additionalFields);

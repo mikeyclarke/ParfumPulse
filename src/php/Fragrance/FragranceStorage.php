@@ -70,4 +70,9 @@ SQL;
         // @phpstan-ignore-next-line
         return $statementResult->fetchAssociative();
     }
+
+    public function bulkUpdate(array $parameters, array $criteria): void
+    {
+        $this->connection->update(self::TABLE_NAME, $parameters, $criteria);
+    }
 }

@@ -48,4 +48,9 @@ SQL;
         // @phpstan-ignore-next-line
         return $statementResult->fetchAssociative();
     }
+
+    public function delete(int $id): void
+    {
+        $this->connection->delete(self::TABLE_NAME, ['id' => $id]);
+    }
 }
