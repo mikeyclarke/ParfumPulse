@@ -10,28 +10,28 @@ use PHPUnit\Framework\TestCase;
 use ParfumPulse\Brand\BrandCreator;
 use ParfumPulse\Brand\BrandLazyCreation;
 use ParfumPulse\Brand\BrandModel;
+use ParfumPulse\Brand\BrandNameNormalizer;
 use ParfumPulse\Brand\BrandRepository;
-use ParfumPulse\Typography\StringNormalizer;
 
 class BrandLazyCreationTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private LegacyMockInterface $brandCreator;
+    private LegacyMockInterface $brandNameNormalizer;
     private LegacyMockInterface $brandRepository;
-    private LegacyMockInterface $stringNormalizer;
     private BrandLazyCreation $brandLazyCreation;
 
     public function setUp(): void
     {
         $this->brandCreator = m::mock(BrandCreator::class);
+        $this->brandNameNormalizer = m::mock(BrandNameNormalizer::class);
         $this->brandRepository = m::mock(BrandRepository::class);
-        $this->stringNormalizer = m::mock(StringNormalizer::class);
 
         $this->brandLazyCreation = new BrandLazyCreation(
             $this->brandCreator,
+            $this->brandNameNormalizer,
             $this->brandRepository,
-            $this->stringNormalizer,
         );
     }
 
@@ -45,7 +45,7 @@ class BrandLazyCreationTest extends TestCase
             'name' => $normalized,
         ];
 
-        $this->createStringNormalizerExpectation([$name], $normalized);
+        $this->createBrandNameNormalizerExpectation([$name], $normalized);
         $this->createBrandRepositoryExpectation([$normalized], $brandRow);
 
         $result = $this->brandLazyCreation->createOrRetrieve($name);
@@ -59,7 +59,7 @@ class BrandLazyCreationTest extends TestCase
         $normalized = 'L’Occitane';
         $brand = new BrandModel();
 
-        $this->createStringNormalizerExpectation([$name], $normalized);
+        $this->createBrandNameNormalizerExpectation([$name], $normalized);
         $this->createBrandRepositoryExpectation([$normalized], null);
         $this->createBrandCreatorExpectation([$normalized], $brand);
 
@@ -67,9 +67,9 @@ class BrandLazyCreationTest extends TestCase
         $this->assertEquals($brand, $result);
     }
 
-    private function createStringNormalizerExpectation(array $args, string $result): void
+    private function createBrandNameNormalizerExpectation(array $args, string $result): void
     {
-        $this->stringNormalizer
+        $this->brandNameNormalizer
             ->shouldReceive('normalize')
             ->once()
             ->with(...$args)

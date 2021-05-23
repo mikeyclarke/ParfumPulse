@@ -1,0 +1,11 @@
+parameters:
+    brand_name_aliases:
+        'Christian Dior': 'Dior'
+        'Mancera Paris': 'Mancera'
+        'Memo': 'Memo Paris'
+        'Mercedes Benz': 'Mercedes-Benz'
+        'ST Dupont': 'S.T. Dupont'
+        'United Colors of Benetton': 'Benetton'
+        'United Colours of Benetton': 'Benetton'
+        'Van Cleef and Arpels': 'Van Cleef & Arpels'
+        'Viktor & Rolf': 'Viktor&Rolf'

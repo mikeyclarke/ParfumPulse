@@ -1,4 +1,5 @@
 imports:
+    - { resource: brand_aliases.yml }
     - { resource: merchants.yml }
 
 # This file is the entry point to configure your own services.
@@ -34,6 +35,10 @@ services:
     ParfumPulse\FrontEnd\Controller\:
         resource: '../src/php/FrontEnd/Controller'
         tags: ['controller.service_arguments']
+
+    ParfumPulse\Brand\BrandNameNormalizer:
+        arguments:
+            $brandNameAliases: '%brand_name_aliases%'
 
     ParfumPulse\Scraper\ScraperBot:
         autowire: false
