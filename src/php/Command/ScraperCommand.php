@@ -86,7 +86,7 @@ class ScraperCommand extends Command
 
         $io->section('Retrying failed requests');
 
-        $retryFailures = $this->runScraper($io, $scraper, $merchant, $retries);
+        $retryFailures = $this->runScraper($io, $scraper, $merchant, $retries, true);
         if (empty($retryFailures)) {
             $io->success(sprintf('%d pages sucessfully scraped.', count($retries)));
             return Command::SUCCESS;
@@ -110,7 +110,8 @@ class ScraperCommand extends Command
         SymfonyStyle $io,
         ScraperInterface $scraper,
         MerchantModel $merchant,
-        UrlCollection $urlCollection
+        UrlCollection $urlCollection,
+        bool $retries = false
     ): array {
         $failures = [];
 
@@ -139,7 +140,7 @@ class ScraperCommand extends Command
                 $this->scraperResultsProcessor->process($merchant, $stageResults);
                 $stageResults = [];
 
-                if ($stageFailureCount / self::CHECKPOINT_FREQUENCY >= self::ABORT_THRESHOLD) {
+                if ($stageFailureCount / self::CHECKPOINT_FREQUENCY >= self::ABORT_THRESHOLD && !$retries) {
                     throw new ElevatedErrorLevelsException();
                 }
                 $stageFailureCount = 0;
