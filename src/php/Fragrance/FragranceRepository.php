@@ -49,6 +49,25 @@ class FragranceRepository
         return $result;
     }
 
+    public function findOneById(int $id, array $additionalFields = []): ?array
+    {
+        $fields = array_merge(self::DEFAULT_FIELDS, $additionalFields);
+
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->select($fields)
+            ->where('id = :id')
+            ->from(self::TABLE_NAME);
+
+        $qb->setParameter('id', $id);
+
+        $result = $qb->fetchAssociative();
+        if (false === $result) {
+            return null;
+        }
+        return $result;
+    }
+
     public function getAllForBrand(int $brandId): array
     {
         $qb = $this->connection->createQueryBuilder();

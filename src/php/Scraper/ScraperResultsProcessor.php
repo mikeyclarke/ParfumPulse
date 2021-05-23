@@ -9,6 +9,7 @@ use ParfumPulse\Brand\BrandLazyCreation;
 use ParfumPulse\Brand\BrandModel;
 use ParfumPulse\Fragrance\FragranceLazyCreation;
 use ParfumPulse\Fragrance\FragranceModel;
+use ParfumPulse\Fragrance\FragranceRepository;
 use ParfumPulse\MerchantPage\MerchantPageLazyCreation;
 use ParfumPulse\MerchantPage\MerchantPageModel;
 use ParfumPulse\Merchant\MerchantModel;
@@ -19,6 +20,7 @@ use ParfumPulse\Product\ProductRepository;
 use ParfumPulse\Scraper\UrlIgnoreList;
 use ParfumPulse\Variant\VariantLazyCreation;
 use ParfumPulse\Variant\VariantModel;
+use ParfumPulse\Variant\VariantRepository;
 
 class ScraperResultsProcessor
 {
@@ -26,12 +28,14 @@ class ScraperResultsProcessor
         private BrandLazyCreation $brandLazyCreation,
         private Connection $connection,
         private FragranceLazyCreation $fragranceLazyCreation,
+        private FragranceRepository $fragranceRepository,
         private MerchantPageLazyCreation $merchantPageLazyCreation,
         private PriceManager $priceManager,
         private ProductLazyCreation $productLazyCreation,
         private ProductRepository $productRepository,
         private UrlIgnoreList $urlIgnoreList,
         private VariantLazyCreation $variantLazyCreation,
+        private VariantRepository $variantRepository,
     ) {
     }
 
@@ -48,8 +52,12 @@ class ScraperResultsProcessor
             $this->connection->beginTransaction();
             try {
                 $merchantPage = $this->createOrUpdatePage($result, $merchant);
-                $brand = $this->createOrRetrieveBrand($result);
-                $fragrance = $this->createOrRetrieveFragrance($result, $brand);
+
+                $fragrance = $this->getFragranceFromVariants($result);
+                if (null === $fragrance) {
+                    $brand = $this->createOrRetrieveBrand($result);
+                    $fragrance = $this->createOrRetrieveFragrance($result, $brand);
+                }
 
                 $variants = $result->getScrapedVariants();
                 $products = [];
@@ -138,6 +146,33 @@ class ScraperResultsProcessor
         $brand = $result->getScrapedBrand();
         // @phpstan-ignore-next-line
         return $this->brandLazyCreation->createOrRetrieve($brand['name']);
+    }
+
+    private function getFragranceFromVariants(ScraperResult $result): ?FragranceModel
+    {
+        $variants = $result->getScrapedVariants();
+
+        $gtins = [];
+        foreach ($variants as $variant) {
+            if (null !== $variant['gtin']) {
+                $gtins[] = $variant['gtin'];
+            }
+        }
+
+        if (empty($gtins)) {
+            return null;
+        }
+
+        $fragranceId = $this->variantRepository->getFragranceIdForGtins($gtins);
+        if (null === $fragranceId) {
+            return null;
+        }
+
+        $result = $this->fragranceRepository->findOneById($fragranceId);
+        if (null === $result) {
+            return null;
+        }
+        return FragranceModel::createFromArray($result);
     }
 
     private function createOrUpdatePage(ScraperResult $result, MerchantModel $merchant): MerchantPageModel

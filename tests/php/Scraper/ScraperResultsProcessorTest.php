@@ -13,6 +13,7 @@ use ParfumPulse\Brand\BrandModel;
 use ParfumPulse\Fragrance\FragranceLazyCreation;
 use ParfumPulse\Fragrance\FragranceModel;
 use ParfumPulse\Fragrance\FragranceGender;
+use ParfumPulse\Fragrance\FragranceRepository;
 use ParfumPulse\Fragrance\FragranceType;
 use ParfumPulse\MerchantPage\MerchantPageLazyCreation;
 use ParfumPulse\MerchantPage\MerchantPageModel;
@@ -26,6 +27,7 @@ use ParfumPulse\Scraper\ScraperResultsProcessor;
 use ParfumPulse\Scraper\UrlIgnoreList;
 use ParfumPulse\Variant\VariantLazyCreation;
 use ParfumPulse\Variant\VariantModel;
+use ParfumPulse\Variant\VariantRepository;
 
 class ScraperResultsProcessorTest extends TestCase
 {
@@ -34,12 +36,14 @@ class ScraperResultsProcessorTest extends TestCase
     private LegacyMockInterface $brandLazyCreation;
     private LegacyMockInterface $connection;
     private LegacyMockInterface $fragranceLazyCreation;
+    private LegacyMockInterface $fragranceRepository;
     private LegacyMockInterface $merchantPageLazyCreation;
     private LegacyMockInterface $priceManager;
     private LegacyMockInterface $productLazyCreation;
     private LegacyMockInterface $productRepository;
     private LegacyMockInterface $urlIgnoreList;
     private LegacyMockInterface $variantLazyCreation;
+    private LegacyMockInterface $variantRepository;
     private ScraperResultsProcessor $scraperResultsProcessor;
 
     public function setUp(): void
@@ -47,23 +51,27 @@ class ScraperResultsProcessorTest extends TestCase
         $this->brandLazyCreation = m::mock(BrandLazyCreation::class);
         $this->connection = m::mock(Connection::class);
         $this->fragranceLazyCreation = m::mock(FragranceLazyCreation::class);
+        $this->fragranceRepository = m::mock(FragranceRepository::class);
         $this->merchantPageLazyCreation = m::mock(MerchantPageLazyCreation::class);
         $this->priceManager = m::mock(PriceManager::class);
         $this->productLazyCreation = m::mock(ProductLazyCreation::class);
         $this->productRepository = m::mock(ProductRepository::class);
         $this->urlIgnoreList = m::mock(UrlIgnoreList::class);
         $this->variantLazyCreation = m::mock(VariantLazyCreation::class);
+        $this->variantRepository = m::mock(VariantRepository::class);
 
         $this->scraperResultsProcessor = new ScraperResultsProcessor(
             $this->brandLazyCreation,
             $this->connection,
             $this->fragranceLazyCreation,
+            $this->fragranceRepository,
             $this->merchantPageLazyCreation,
             $this->priceManager,
             $this->productLazyCreation,
             $this->productRepository,
             $this->urlIgnoreList,
             $this->variantLazyCreation,
+            $this->variantRepository,
         );
     }
 
@@ -202,6 +210,110 @@ class ScraperResultsProcessorTest extends TestCase
         $this->scraperResultsProcessor->process($merchant, $results);
     }
 
+    public function testProcessUsesFragranceOfExistingVariants(): void
+    {
+        $merchant = new MerchantModel();
+        $gtin = '3274872368026';
+        $results = [
+            new ScraperResult(
+                '/foo/bar',
+                scrapedBrand: ['name' => 'Givenchy'],
+                scrapedFragrance: [
+                    'name' => 'Gentleman',
+                    'gender' => FragranceGender::MALE,
+                    'type' => FragranceType::EAU_DE_PARFUM,
+                ],
+                scrapedVariants: [
+                    [
+                        'name' => '100 ml',
+                        'gtin' => $gtin,
+                        'free_delivery' => false,
+                        'amount' => 62.95,
+                        'available' => true,
+                        'url_path' => '/foo/bar',
+                    ],
+                ],
+            ),
+        ];
+
+        $page = new MerchantPageModel();
+        $fragranceId = 123;
+        $fragranceResult = ['id' => $fragranceId];
+        $gentleman100 = new VariantModel();
+        $gentleman100Product = new ProductModel();
+
+        $this->createConnectionBeginTransactionExpectation();
+        $this->createMerchantPageLazyCreationExpectation(
+            [$merchant, '/foo/bar', ['failed_scrape_days' => 0, 'should_scrape' => true,]],
+            $page
+        );
+        $this->createVariantRepositoryExpectation([[$gtin]], $fragranceId);
+        $this->createFragranceRepositoryExpectation([$fragranceId], $fragranceResult);
+        $this->createVariantLazyCreationExpectation([m::type(FragranceModel::class), '100 ml', $gtin], $gentleman100);
+        $this->createProductLazyCreationExpectation(
+            [$merchant, $gentleman100, $page, '/foo/bar', ['free_delivery' => false]],
+            $gentleman100Product
+        );
+        $this->createPriceManagerExpectation([$gentleman100Product, 62.95, true]);
+        $this->createConnectionCommitExpectation();
+
+        $this->scraperResultsProcessor->process($merchant, $results);
+    }
+
+    public function testProcessUsesFragranceLazyCreationIfVariantsNotFoundWithGtin(): void
+    {
+        $merchant = new MerchantModel();
+        $gtin = '3274872368026';
+        $results = [
+            new ScraperResult(
+                '/foo/bar',
+                scrapedBrand: ['name' => 'Givenchy'],
+                scrapedFragrance: [
+                    'name' => 'Gentleman',
+                    'gender' => FragranceGender::MALE,
+                    'type' => FragranceType::EAU_DE_PARFUM,
+                ],
+                scrapedVariants: [
+                    [
+                        'name' => '100 ml',
+                        'gtin' => $gtin,
+                        'free_delivery' => false,
+                        'amount' => 62.95,
+                        'available' => true,
+                        'url_path' => '/foo/bar',
+                    ],
+                ],
+            ),
+        ];
+
+        $page = new MerchantPageModel();
+        $givenchy = new BrandModel();
+        $gentleman = new FragranceModel();
+        $gentleman100 = new VariantModel();
+        $gentleman100Product = new ProductModel();
+
+        $this->createConnectionBeginTransactionExpectation();
+        $this->createMerchantPageLazyCreationExpectation(
+            [$merchant, '/foo/bar', ['failed_scrape_days' => 0, 'should_scrape' => true,]],
+            $page
+        );
+        $this->createVariantRepositoryExpectation([[$gtin]], null);
+        $this->createBrandLazyCreationExpectation(['Givenchy'], $givenchy);
+        $this->createFragranceLazyCreationExpectation(
+            [$givenchy, 'Gentleman', FragranceGender::MALE, FragranceType::EAU_DE_PARFUM],
+            $gentleman
+        );
+        $this->createVariantLazyCreationExpectation([$gentleman, '100 ml', $gtin], $gentleman100);
+        $this->createProductLazyCreationExpectation(
+            [$merchant, $gentleman100, $page, '/foo/bar', ['free_delivery' => false]],
+            $gentleman100Product
+        );
+        $this->createPriceManagerExpectation([$gentleman100Product, 62.95, true]);
+        $this->createConnectionCommitExpectation();
+
+        $this->scraperResultsProcessor->process($merchant, $results);
+    }
+
     private function createConnectionBeginTransactionExpectation(): void
     {
         $this->connection
@@ -213,6 +325,24 @@ class ScraperResultsProcessorTest extends TestCase
     {
         $this->merchantPageLazyCreation
             ->shouldReceive('createOrUpdate')
+            ->once()
+            ->with(...$args)
+            ->andReturn($result);
+    }
+
+    private function createVariantRepositoryExpectation(array $args, ?int $result): void
+    {
+        $this->variantRepository
+            ->shouldReceive('getFragranceIdForGtins')
+            ->once()
+            ->with(...$args)
+            ->andReturn($result);
+    }
+
+    private function createFragranceRepositoryExpectation(array $args, ?array $result): void
+    {
+        $this->fragranceRepository
+            ->shouldReceive('findOneById')
             ->once()
             ->with(...$args)
             ->andReturn($result);

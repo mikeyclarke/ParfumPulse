@@ -93,4 +93,26 @@ SQL;
         $resultSet = $stmt->execute();
         return $resultSet->fetchAllAssociative();
     }
+
+    public function getFragranceIdForGtins(array $gtins): ?int
+    {
+        $sql = 'SELECT fragrance_id FROM variant WHERE gtin IN (?) GROUP BY fragrance_id';
+
+        $statementResult = $this->connection->executeQuery($sql, [$gtins], [Connection::PARAM_STR_ARRAY]);
+
+        if ($statementResult->rowCount() > 1) {
+            return null;
+        }
+
+        $result = $statementResult->fetchOne();
+        if (false === $result) {
+            return null;
+        }
+
+        if (!is_int($result)) {
+            throw new \RuntimeException('fragrance_id is not an integer.');
+        }
+
+        return $result;
+    }
 }
