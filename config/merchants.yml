@@ -1,5 +1,12 @@
 parameters:
     merchants:
+        allbeauty:
+            name: 'allbeauty'
+            url: 'https://www.allbeauty.com'
+            sitemap_url: 'http://www.allbeauty.com/reports/google_sitemap.xml'
+            ignore_list_file: '/Users/mikey/code/ParfumPulse/allbeauty_ignores.json'
+            use_lastmod: false
+
         notino:
             name: 'Notino'
             url: 'https://www.notino.co.uk'

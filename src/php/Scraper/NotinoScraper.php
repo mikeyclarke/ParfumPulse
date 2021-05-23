@@ -10,6 +10,7 @@ use ParfumPulse\Scraper\Exception\UnableToExtractDataException;
 use ParfumPulse\Scraper\ScraperBot;
 use ParfumPulse\Scraper\ScraperInterface;
 use ParfumPulse\Scraper\ScraperResult;
+use ParfumPulse\Variant\GtinNormalizer;
 
 class NotinoScraper implements ScraperInterface
 {
@@ -132,7 +133,7 @@ class NotinoScraper implements ScraperInterface
             }
 
             $variants[] = [
-                'gtin' => (strlen($data['eanCode']) >= 8) ? $data['eanCode'] : null,
+                'gtin' => (strlen($data['eanCode']) >= 8) ? GtinNormalizer::normalize($data['eanCode']) : null,
                 'name' => $size,
                 'amount' => $amount,
                 'url_path' => $data['url'],
