@@ -71,6 +71,11 @@ SQL;
         return $statementResult->fetchAssociative();
     }
 
+    public function delete(int $id): void
+    {
+        $this->connection->delete(self::TABLE_NAME, ['id' => $id]);
+    }
+
     public function bulkUpdate(array $parameters, array $criteria): void
     {
         $this->connection->update(self::TABLE_NAME, $parameters, $criteria);
