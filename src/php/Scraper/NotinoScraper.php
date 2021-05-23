@@ -95,7 +95,7 @@ class NotinoScraper implements ScraperInterface
 
         $brand = ['name' => $this->decodeText($productData['brand']['name'])];
         $fragrance = [
-            'name' => preg_replace('/^' . $brand['name'] . '\s/', '', $this->decodeText($productData['name'])),
+            'name' => $this->getFragranceName($this->decodeText($productData['name']), $brand['name']),
             'type' => $fragranceType,
             'gender' => $this->getGender($category, $fragranceType),
         ];
@@ -206,6 +206,15 @@ class NotinoScraper implements ScraperInterface
         }
 
         return FragranceGender::UNISEX;
+    }
+
+    private function getFragranceName(string $name, string $brandName): string
+    {
+        if (str_starts_with($name, $brandName)) {
+            return mb_substr($name, mb_strlen($brandName) + 1);
+        }
+
+        return $name;
     }
 
     private function getType(string $category): string
