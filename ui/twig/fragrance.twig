@@ -1,4 +1,17 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+
+{% if fragrance.gender == 'male' %}
+    {% set genderLabel = 'A men’s' %}
+{% elseif fragrance.gender == 'female' %}
+    {% set genderLabel = 'A women’s' %}
+{% else %}
+    {% set genderLabel = 'A unisex' %}
+{% endif %}
+
 <h1>{{ brand.name }} {{ fragrance.name }}</h1>
+<p>{{ genderLabel }} fragrance</p>
 
 <dl>
     {% for name, prices in variants %}
@@ -8,3 +21,5 @@
         {% endfor %}
     {% endfor %}
 </dl>
+
+{% endblock %}

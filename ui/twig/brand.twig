@@ -1,3 +1,7 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+
 <h1>{{ brand.name }}</h1>
 
 <ul>
@@ -6,6 +10,8 @@
             brand_url_slug: brand.urlSlug,
             fragrance_url_id: fragrance.url_id,
             fragrance_url_slug: fragrance.url_slug,
-        }) }}">{{ fragrance.name }} ({{ fragrance.type }})</a></li>
+        }) }}">{{ fragrance.name }} ({{ fragrance.type }})</a> ({{ fragrance.gender }})</li>
     {% endfor %}
 </ul>
+
+{% endblock %}

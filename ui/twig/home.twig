@@ -1,3 +1,7 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+
 <h1>Welcome to ParfumPulse.</h1>
 
 <ul>
@@ -5,3 +9,5 @@
         <li><a href="{{ path('brand', {brand_url_slug: brand.url_slug}) }}">{{ brand.name }}</a></li>
     {% endfor %}
 </ul>
+
+{% endblock %}
