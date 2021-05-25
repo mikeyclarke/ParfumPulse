@@ -25,7 +25,14 @@ class SitemapFrontierUrlGatherer implements FrontierUrlGathererInterface
 
         $collection = new UrlCollection();
         foreach ($sitemap as $entry) {
-            $collection->add($this->getUrlPath((string) $entry->loc), (string) $entry->lastmod ?? null);
+            $urlPath = $this->getUrlPath((string) $entry->loc);
+            if (
+                isset($config['sitemap_url_path_pattern']) &&
+                !preg_match($config['sitemap_url_path_pattern'], $urlPath)
+            ) {
+                continue;
+            }
+            $collection->add($urlPath, (string) $entry->lastmod ?? null);
         }
 
         return $collection;

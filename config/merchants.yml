@@ -3,7 +3,8 @@ parameters:
         allbeauty:
             name: 'allbeauty'
             url: 'https://www.allbeauty.com'
-            sitemap_url: 'http://www.allbeauty.com/reports/google_sitemap.xml'
+            sitemap_url: 'https://www.allbeauty.com/reports/google_sitemap.xml'
+            sitemap_url_path_pattern: '~^\/[0-9]+-[a-z0-9-]+~'
             ignore_list_file: '/Users/mikey/code/ParfumPulse/allbeauty_ignores.json'
             use_lastmod: false
 
