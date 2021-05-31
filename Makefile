@@ -32,6 +32,16 @@ phpstan: ## Check that PHP passes static analysis
 	./vendor/bin/phpstan analyse --memory-limit=-1 src/php tests/php --level 8
 
 ## ---------
+##	Webpack
+## ---------
+
+webpack: ## Run webpack in watch mode
+	yarn run webpack-watch
+
+webpack-production: ## Build webpack assets for production
+	yarn run webpack-build
+
+## ---------
 ##	Environment
 ## ---------
 

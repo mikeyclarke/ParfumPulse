@@ -10,6 +10,7 @@ imports:
 parameters:
     locale: 'en'
     max_failed_scrape_days: '%env(int:MAX_FAILED_SCRAPE_DAYS)%'
+    asset_integrity_manifest_path: '%kernel.project_dir%/public/build/integrity.json'
 
 services:
     # default configuration for services in *this* file
@@ -35,6 +36,10 @@ services:
     ParfumPulse\FrontEnd\Controller\:
         resource: '../src/php/FrontEnd/Controller'
         tags: ['controller.service_arguments']
+
+    ParfumPulse\Asset\AssetIntegrity:
+        arguments:
+            $manifestPath: '%asset_integrity_manifest_path%'
 
     ParfumPulse\Brand\BrandNameNormalizer:
         arguments:
