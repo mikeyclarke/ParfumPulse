@@ -1,3 +1,6 @@
 parameters:
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
+
+    ignoreErrors:
+        - '#Parameter \#1 \$select of method Doctrine\\DBAL\\Query\\QueryBuilder::select\(\) expects array<string>\|string\|null, array given\.#'
