@@ -2,7 +2,7 @@
     "name": "mikeyclarke/parfumpulse",
     "license": "proprietary",
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-redis": "*",
         "ext-bcmath": "*",
         "ext-pgsql": "*",
@@ -52,6 +52,13 @@
     "autoload-dev": {
         "psr-4": {
             "ParfumPulse\\Tests\\": "tests/php/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "phpstan/extension-installer": true,
+            "pyrech/composer-changelogs": true
         }
     }
 }
