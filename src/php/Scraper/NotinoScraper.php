@@ -148,17 +148,16 @@ class NotinoScraper implements ScraperInterface
 
     private function getPrice(array $variantData, array $apolloStateData): ?float
     {
-        if (!isset($variantData['price']) || !isset($variantData['price']['id'])) {
+        if (!isset($variantData['price']) || !is_array($variantData['price'])) {
             return null;
         }
 
-        $priceKey = $variantData['price']['id'];
-        if (!isset($apolloStateData[$priceKey])) {
-            return null;
-        }
-
-        $priceData = $apolloStateData[$priceKey];
+        $priceData = $variantData['price'];
         if (!isset($priceData['currency']) || $priceData['currency'] !== 'GBP') {
+            return null;
+        }
+
+        if (!isset($priceData['value'])) {
             return null;
         }
 
