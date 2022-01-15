@@ -36,6 +36,7 @@ class BrandController
         $html = $this->twig->render('brand.twig', [
             'brand' => $brand,
             'fragrances' => $fragrances,
+            'html_title' => sprintf('%s fragrances', $brand->getName()),
         ]);
 
         return new Response($html);

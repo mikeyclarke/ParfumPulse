@@ -66,12 +66,33 @@ class FragranceController
             ];
         }
 
+        $htmlTitle = $this->formatTitle($brand, $fragrance);
+
         $html = $this->twig->render('fragrance.twig', [
             'brand' => $brand,
             'fragrance' => $fragrance,
+            'html_title' => $htmlTitle,
             'variants' => $variants,
         ]);
 
         return new Response($html);
+    }
+
+    private function formatTitle(BrandModel $brand, FragranceModel $fragrance): string
+    {
+        $title = sprintf('%s %s %s', $brand->getName(), $fragrance->getName(), $fragrance->getType());
+
+        switch ($fragrance->getGender()) {
+            case 'male':
+                $title .= ' for men';
+                break;
+            case 'female':
+                $title .= ' for women';
+                break;
+            default:
+                $title .= ' unisex';
+        }
+
+        return $title;
     }
 }
