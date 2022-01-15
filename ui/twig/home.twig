@@ -2,12 +2,33 @@
 
 {% block content %}
 
-<h1>Welcome to ParfumPulse.</h1>
+<main>
+    <div>
+        <h2>Smell best, spend less</h2>
+        <p>We track the prices of thousands of fragrances and alert you when they drop</p>
+    </div>
 
-<ul>
-    {% for brand in brands %}
-        <li><a href="{{ path('brand', {brand_url_slug: brand.url_slug}) }}">{{ brand.name }}</a></li>
-    {% endfor %}
-</ul>
+    <div>
+        <ol>
+            <li>Set a target price for a fragrance and we’ll email you when it’s reached</li>
+            <li>We track prices across multiple online stores so you always know where it’s cheapest to buy</li>
+            <li>ParfumPulse is completely free, and creating an account is optional</li>
+        </ol>
+    </div>
+
+    <div>
+        <h2>We’re currently tracking…</h2>
+        <ol>
+            <li>{{ platform_stats.fragrances }} <span>fragrances</span></li>
+            <li>{{ platform_stats.brands }} <span>brands</span></li>
+            <li>{{ platform_stats.merchants }} <span>retailers</span></li>
+        </ol>
+    </div>
+
+    <div>
+        <h2>Start saving</h2>
+        <p><button type="button">Search</button> for a fragrance or <a href="{{ path('brands') }}">browse by brand</a></p>
+    </div>
+</main>
 
 {% endblock %}

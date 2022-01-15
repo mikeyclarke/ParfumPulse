@@ -82,4 +82,13 @@ class FragranceRepository
         $result = $qb->fetchAllAssociative();
         return $result;
     }
+
+    public function countAll(): int
+    {
+        $sql = 'SELECT COUNT(*) FROM ' . self::TABLE_NAME;
+
+        $statementResult = $this->connection->executeQuery($sql);
+
+        return $statementResult->fetchOne();
+    }
 }
