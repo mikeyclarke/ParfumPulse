@@ -1,0 +1,13 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+
+<h1>Brands</h1>
+
+<ul>
+    {% for brand in brands %}
+        <li><a href="{{ path('brand', {brand_url_slug: brand.url_slug}) }}">{{ brand.name }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
