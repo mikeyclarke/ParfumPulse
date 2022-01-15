@@ -1,6 +1,7 @@
 parameters:
     brand_name_aliases:
         'Christian Dior': 'Dior'
+        'GUERLAIN': 'Guerlain'
         'Mancera Paris': 'Mancera'
         'Memo': 'Memo Paris'
         'Mercedes Benz': 'Mercedes-Benz'
