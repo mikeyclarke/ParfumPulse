@@ -1,0 +1,25 @@
+<nav>
+    {% if app.request.getPathInfo() is same as('/') %}
+        <h1>ParfumPulse</h1>
+    {% else %}
+        <a href="/">ParfumPulse</a>
+    {% endif %}
+
+    <button type="button">Toggle search form</button>
+
+    <form method="GET">
+        <input type="search" aria-label="Search ParfumPulse" placeholder="Search fragrances…" name="q">
+        <button type="submit">Search</button>
+    </form>
+
+    <ol>
+        <li>
+            <a href="{{ path('brands') }}">Brands</a>
+        </li>
+        <li>
+            <span>FAQ</span>
+        </li>
+    </ol>
+
+    <button type="button">Account menu</button>
+</nav>

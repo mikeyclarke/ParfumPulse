@@ -1,12 +1,15 @@
 <!doctype html>
 <html lang="en_GB">
     <head>
-        <title>ParfumPulse</title>
+        <title>{% if html_title is defined %}{{ html_title }} - {% endif %}ParfumPulse</title>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="{{ asset('app.css') }}" integrity="{{ asset_integrity('app.css') }}">
     </head>
 
     <body>
+        {% include '_navigation.twig' %}
+
         {% block content %}{% endblock %}
     </body>
 </html>
