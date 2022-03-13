@@ -23,7 +23,11 @@ class UrlIgnoreList
         if (false === $file) {
             throw new \Exception('Couldn’t read file');
         }
-        return json_decode($file, true);
+        $decoded = json_decode($file, true);
+        if (!is_array($decoded)) {
+            throw new \RuntimeException('URL ignore list should be an array');
+        }
+        return $decoded;
     }
 
     public function add(MerchantModel $merchant, array $urls): void

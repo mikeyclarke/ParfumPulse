@@ -41,7 +41,7 @@ class ScraperBot
         foreach ($dataNodes as $node) {
             $text = $node->textContent;
             $json = json_decode($text, true);
-            if (isset($json['@type']) && strtolower($json['@type']) === 'product') {
+            if (is_array($json) && isset($json['@type']) && strtolower($json['@type']) === 'product') {
                 return $json;
             }
         }
@@ -55,7 +55,9 @@ class ScraperBot
         foreach ($dataNodes as $node) {
             $text = $node->textContent;
             $json = json_decode($text, true);
-            return $json;
+            if (is_array($json)) {
+                return $json;
+            }
         }
         return null;
     }

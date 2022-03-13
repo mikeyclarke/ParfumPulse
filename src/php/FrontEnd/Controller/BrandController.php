@@ -23,7 +23,7 @@ class BrandController
 
     public function getAction(Request $request): Response
     {
-        $urlSlug = $request->attributes->get('brand_url_slug');
+        $urlSlug = $request->attributes->getAlnum('brand_url_slug');
 
         $result = $this->brandRepository->findOneByUrlSlug($urlSlug);
         if (null === $result) {

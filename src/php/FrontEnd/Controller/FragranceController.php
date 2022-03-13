@@ -28,7 +28,7 @@ class FragranceController
 
     public function getAction(Request $request): Response
     {
-        $brandUrlSlug = $request->attributes->get('brand_url_slug');
+        $brandUrlSlug = $request->attributes->getAlnum('brand_url_slug');
         $fragranceUrlId = $request->attributes->get('fragrance_url_id');
         $fragranceUrlSlug = $request->attributes->get('fragrance_url_slug');
 

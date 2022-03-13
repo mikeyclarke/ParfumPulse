@@ -95,6 +95,7 @@ class BrandRepository
 
         $statementResult = $this->connection->executeQuery($sql);
 
+        // @phpstan-ignore-next-line
         return $statementResult->fetchOne();
     }
 }

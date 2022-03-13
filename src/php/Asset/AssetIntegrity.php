@@ -33,7 +33,13 @@ class AssetIntegrity
             if (false === $fileContents) {
                 throw new RuntimeException(sprintf('Could not read integrity manifest file "%s"', $this->manifestPath));
             }
-            $this->manifestData = json_decode($fileContents, true, JSON_THROW_ON_ERROR);
+
+            $decoded = json_decode($fileContents, true, JSON_THROW_ON_ERROR);
+            if (!is_array($decoded)) {
+                throw new RuntimeException('Manifest should be an array');
+            }
+
+            $this->manifestData = $decoded;
         }
 
         return $this->manifestData[$path] ?? null;

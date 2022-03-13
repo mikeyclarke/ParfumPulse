@@ -128,6 +128,7 @@ class ScraperCommand extends Command
             }
 
             try {
+                // @phpstan-ignore-next-line
                 $stageResults[] = $scraper->scrape($url, $props);
             } catch (ScraperException) {
                 $stageFailureCount += 1;

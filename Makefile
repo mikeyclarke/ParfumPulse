@@ -29,7 +29,7 @@ phpcs: ## Check that PHP complies with stylistic rules
 ## ---------
 
 phpstan: ## Check that PHP passes static analysis
-	./vendor/bin/phpstan analyse --memory-limit=-1 src/php tests/php --level 8
+	./vendor/bin/phpstan analyse --memory-limit=-1 src/php tests/php --level 9
 
 ## ---------
 ##	Webpack
