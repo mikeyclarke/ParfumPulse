@@ -32,7 +32,11 @@ class SitemapFrontierUrlGatherer implements FrontierUrlGathererInterface
             ) {
                 continue;
             }
-            $collection->add($urlPath, (string) $entry->lastmod ?? null);
+            $lastmod = null;
+            if (!empty($entry->lasmod)) {
+                $lastmod = (string) $entry->lastmod;
+            }
+            $collection->add($urlPath, $lastmod);
         }
 
         return $collection;

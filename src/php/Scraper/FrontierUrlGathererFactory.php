@@ -12,7 +12,6 @@ class FrontierUrlGathererFactory
 {
     public function __construct(
         private SitemapFrontierUrlGatherer $sitemapFrontierUrlGatherer,
-        private array $merchantsConfig,
     ) {
     }
 
